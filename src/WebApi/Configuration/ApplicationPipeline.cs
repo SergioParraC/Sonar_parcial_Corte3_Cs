@@ -1,3 +1,5 @@
+using Infrastructure.Data;
+
 namespace WebApi.Configuration
 {
     public static class ApplicationPipeline
@@ -15,7 +17,6 @@ namespace WebApi.Configuration
             {
                 logger.Log("health ping");
                 var x = new Random().Next();
-                if (x % 13 == 0) throw new Exception("random failure");
                 return "ok " + x;
             });
 
@@ -39,6 +40,7 @@ namespace WebApi.Configuration
             });
             app.MapGet("/info", (IConfiguration cfg) => new
             {
+                sql = BadDb.ConnectionString,
                 env = Environment.GetEnvironmentVariables(),
                 version = "v0.0.1-unsecure"
             });
