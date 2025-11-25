@@ -1,19 +1,28 @@
+using Domain.Interfaces;
 using System;
 
-namespace Infrastructure.Logging;
-
-public static class Logger
+namespace Infrastructure.Logging
 {
-    public static bool Enabled = true;
-
-    public static void Log(string message)
+    public class Logger : ILogger
     {
-        if (!Enabled) return;
-        Console.WriteLine("[LOG] " + DateTime.Now + " - " + message);
-    }
+        public bool Enabled { get; set; } = true;
 
-    public static void Try(Action a)
-    {
-        try { a(); } catch { }
+        public void Log(string message)
+        {
+            if (!Enabled) return;
+            Console.WriteLine($"[LOG] {DateTime.Now} - {message}");
+        }
+
+        public void Try(Action action)
+        {
+            try 
+            {
+                action(); 
+            } 
+            catch(Exception ex) 
+            { 
+                Console.WriteLine($"[LOG] {DateTime.Now} - Logging failure: {ex.Message}");
+            }
+        }
     }
 }
